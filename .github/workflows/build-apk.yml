@@ -9,26 +9,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    defaults:
+      run:
+        working-directory: daily_assistant
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
         with:
           channel: stable
 
-      - name: Flutter Version
-        run: flutter --version
+      - run: flutter pub get
 
-      - name: Install Dependencies
-        run: flutter pub get
+      - run: flutter build apk --release
 
-      - name: Build APK
-        run: flutter build apk --release
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: daily-assistant-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: daily_assistant/build/app/outputs/flutter-apk/app-release.apk
